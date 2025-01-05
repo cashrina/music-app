@@ -10,3 +10,8 @@ export interface IAlbum {
     year: Date;
     image: string | null;
 }
+export interface ITrack {
+    name: string;
+    album: string;
+    duration: string;
+}
