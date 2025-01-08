@@ -8,25 +8,28 @@ const trackRouter = express.Router();
 
 trackRouter.get('/', async (req, res, next) => {
     try {
-        const { album, artist } = req.query;
-        let tracks;
-
-        if (artist) {
-            const albums = await Album.find({ artist });
-            const albumId = albums.map(album => album._id);
-            tracks = await Track.find({ album: { $in: albumId } });
-        } else if (album) {
-            tracks = await Track.find({ album });
-        } else {
-            tracks = await Track.find();
+        const {album, artist}  = req.query;
+        let filter = {};
+        if (album) {
+            filter = {album: album};
+        } else if (artist) {
+            const albumsList = await Album.find({artist});
+            const albumsIdArray = albumsList.map(album => album._id);
+            filter = {album: {$in: albumsIdArray}};
         }
 
+        const tracks = await Track.find(filter).populate({
+            path:'album',
+            populate: {
+                path: 'artist',
+                model: 'Artist'
+            }
+        });
         res.send(tracks);
     } catch (error) {
         next(error);
     }
 });
-
 
 trackRouter.post('/', async (req, res, next) => {
     try {
