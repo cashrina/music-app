@@ -6,38 +6,38 @@ import Album from "../models/Album";
 
 const albumRouter = express.Router();
 
-albumRouter.get('/', async (req:any, res:any, next) => {
+albumRouter.get('/', async (req, res, next) => {
     try {
         const { artist } = req.query;
-
         if (artist) {
             const albums = await Album.find({ artist });
-            return res.send(albums);
+            res.send(albums);
+            return ;
         }
-
         const albums = await Album.find();
-        return res.send(albums);
+        res.send(albums);
+        return
     } catch (error) {
         next(error);
     }
 });
 
-albumRouter.get('/:id', async (req: any, res: any, next) => {
+albumRouter.get('/:id', async (req, res, next) => {
     try {
-        const album = await Album.findById(req.params.id).populate('artist');
+        const albums = await Album.findById(req.params.id).populate('artist');
 
-        if (album === null) {
-            return res.status(404).send({ error: 'Album not found' });
+        if (albums === null) {
+            res.status(404).send({ error: 'Album not found' });
         }
-
-        return res.send(album);
+        res.send(albums);
+        return;
     } catch (error) {
         next(error);
     }
 });
 
 
-albumRouter.post('/',imagesUpload.single('image'), async (req:any, res:any, next) => {
+albumRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     try {
         const albums: IAlbum = {
             name: req.body.name,
@@ -47,17 +47,15 @@ albumRouter.post('/',imagesUpload.single('image'), async (req:any, res:any, next
         };
         const album = new Album(albums);
         await album.save();
-        return res.send(album);
-
+        res.send(album);
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
-            return res.status(400).send(error);
+            res.status(400).send(error);
+        } else {
+            next(error);
         }
-        return next(error);
     }
 });
-
-
 
 export default albumRouter;
 

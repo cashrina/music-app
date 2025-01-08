@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import {CorsOptions} from 'cors';
 
 const rootPath = __dirname;

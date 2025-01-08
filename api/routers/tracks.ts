@@ -4,13 +4,13 @@ import {ITrack} from "../types";
 import Album from "../models/Album";
 import Track from "../models/Track";
 
-
 const trackRouter = express.Router();
 
-trackRouter.get('/', async (req: any, res:any, next:any) => {
+trackRouter.get('/', async (req, res, next) => {
     try {
         const { album, artist } = req.query;
         let tracks;
+
         if (artist) {
             const albums = await Album.find({ artist });
             const albumId = albums.map(album => album._id);
@@ -21,15 +21,14 @@ trackRouter.get('/', async (req: any, res:any, next:any) => {
             tracks = await Track.find();
         }
 
-        return res.send(tracks);
-
+        res.send(tracks);
     } catch (error) {
         next(error);
     }
 });
 
-trackRouter.post('/', async (req:any, res: any, next: any) => {
 
+trackRouter.post('/', async (req, res, next) => {
     try {
         const tracks: ITrack = {
             name: req.body.name,
@@ -39,16 +38,14 @@ trackRouter.post('/', async (req:any, res: any, next: any) => {
 
         const track = new Track(tracks);
         await track.save();
-        return res.send(track);
-
+        res.send(track);
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
-            return res.status(400).send(error);
+            res.status(400).send(error);
+        } else {
+            next(error);
         }
-        return next(error);
     }
 });
-
-
 
 export default trackRouter;
