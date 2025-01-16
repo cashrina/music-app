@@ -21,7 +21,7 @@ interface Props {
 }
 
 const ArtistsItem: React.FC<Props> = ({ id, name, image, info }) => {
-  const productsImage: string = image ? apiUrl + "/" + image : NoPictureImage;
+  const artistsImage: string = image ? apiUrl + "/" + image : NoPictureImage;
 
   return (
     <Grid container justifyContent="center" sx={{ padding: '20px' }}>
@@ -44,7 +44,7 @@ const ArtistsItem: React.FC<Props> = ({ id, name, image, info }) => {
             <CardHeader title={name} />
             <CardMedia
               component="img"
-              image={productsImage}
+              image={artistsImage}
               alt={name}
               sx={{
                 height: 180,

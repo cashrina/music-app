@@ -4,3 +4,11 @@ export interface Artists {
   image: string;
   info: string;
 }
+
+export interface Albums {
+  _id: string;
+  artists: Artists;
+  name: string;
+  year: number;
+  image: string | null;
+}

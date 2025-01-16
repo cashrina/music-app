@@ -9,14 +9,15 @@ const albumRouter = express.Router();
 albumRouter.get('/', async (req, res, next) => {
     try {
         const { artist } = req.query;
+        let albums;
+
         if (artist) {
-            const albums = await Album.find({ artist });
-            res.send(albums);
-            return ;
+            albums = await Album.find({ artist }).sort({ year: -1 });
+        } else {
+            albums = await Album.find().sort({ year: -1 });
         }
-        const albums = await Album.find();
+
         res.send(albums);
-        return
     } catch (error) {
         next(error);
     }
@@ -35,7 +36,6 @@ albumRouter.get('/:id', async (req, res, next) => {
         next(error);
     }
 });
-
 
 albumRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     try {

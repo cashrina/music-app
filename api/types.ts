@@ -9,7 +9,7 @@ export interface IArtist {
 export interface IAlbum {
     name: string;
     artist: string;
-    year: Date;
+    year: number;
     image: string | null;
 }
 export interface ITrack {
